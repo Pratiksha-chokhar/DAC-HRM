@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+	<aop:aspectj-autoproxy />
+
+
+	<context:property-placeholder
+		location="classpath*:META-INF/hibernate-test.properties" />
+
+	<context:component-scan base-package="com.springhrms.aspect" />
+	<context:component-scan base-package="com.springhrms.dao" />
+	<context:component-scan base-package="com.springhrms.service" />
+
+	<beans:bean class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close" id="dataSource">
+		<beans:property name="driverClassName" value="${database.driverClassName}" />
+		<beans:property name="url" value="${database.url}" />
+		<beans:property name="username" value="${database.username}" />
+		<beans:property name="password" value="${database.password}" />
+	</beans:bean>
+
+	<beans:bean id="hibernate4AnnotatedSessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<beans:property name="dataSource" ref="dataSource" />
+		<beans:property name="packagesToScan" value="com.springhrms.model" />
+		<beans:property name="hibernateProperties">
+			<beans:props>
+				<beans:prop key="hibernate.dialect">${hibernate.dialect}</beans:prop>
+				<beans:prop key="hibernate.show_sql">${hibernate.show_sql}</beans:prop>
+				<beans:prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</beans:prop>
+				<beans:prop key="hibernate.cache.use_second_level_cache">true</beans:prop>
+				<beans:prop key="hibernate.cache.use_query_cache">true</beans:prop>
+				<beans:prop key="hibernate.cache.region.factory_class">
+					org.hibernate.cache.ehcache.EhCacheRegionFactory
+				</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+
+
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<beans:bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<beans:property name="sessionFactory"
+			ref="hibernate4AnnotatedSessionFactory" />
+	</beans:bean>
+
+	<jdbc:initialize-database data-source="dataSource">
+		<jdbc:script location="classpath:META-INF/sql/db-test-data-test.sql" />
+	</jdbc:initialize-database>
+
+</beans:beans>
