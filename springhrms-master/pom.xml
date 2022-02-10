@@ -13,7 +13,7 @@
 		<springsecurity.version>4.0.1.RELEASE</springsecurity.version>
 		<org.aspectj-version>1.7.4</org.aspectj-version>
 		<org.slf4j-version>1.7.5</org.slf4j-version>
-		<hibernate.version>4.3.5.Final</hibernate.version>
+		<hibernate.version>5.4.24.Final</hibernate.version>
 		<hibernate.validator.version>5.1.2.Final</hibernate.validator.version>
 		<javax.validation.version>1.1.0.Final</javax.validation.version>
 		<mysql.version>5.1.10</mysql.version>
@@ -89,7 +89,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>4.3.10.Final</version>
+			<version>5.4.24.Final</version>
 		</dependency>
 
 		<dependency>
